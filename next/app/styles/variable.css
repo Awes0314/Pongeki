@@ -1,0 +1,9 @@
+/* スタイル用変数 */
+:root {
+    --color-main-blue: #3d5a80;
+    --color-light-blue: #98c1d9;
+    --color-splight-blue: #e0fbfc;
+    --color-orange: #ee6c4d;
+    --color-dark: #293241;
+    --radius: 12px;
+}
