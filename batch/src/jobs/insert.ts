@@ -127,7 +127,7 @@ export async function updateTechFlagList(techFlagList: { title: string; level: s
 export async function updateChartConstList(chartConstList: { title: string; diff: string; level: string; chartConst: number; ps5Rating: number; ps4Rating: number; ps3Rating: number; ps2Rating: number; ps1Rating: number;}[]) {
   log('info', '譜面定数情報一覧update処理開始');
 
-    const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!supabaseUrl || !supabaseKey) {
     throw new Error('Supabase URL or Service Role Key is not defined in environment variables.');
@@ -148,22 +148,23 @@ export async function updateChartConstList(chartConstList: { title: string; diff
       });
     }
 
-    // 500件ずつbulk update
-    const BATCH_SIZE = 500;
+    // 10件ずつまとめてselectし、存在するidのみupdate、なければログ出力
+    const BATCH_SIZE = 10;
     for (let i = 0; i < records.length; i += BATCH_SIZE) {
       const batch = records.slice(i, i + BATCH_SIZE);
+      const ids = batch.map(r => r.id);
+      const { data: existRows, error: selectError } = await supabase
+        .from('CHARTS')
+        .select('id')
+        .in('id', ids);
+      log('info', `Processing batch index ${i / BATCH_SIZE + 1}: Checking existence for ${ids.length} records.`);
+      if (selectError) {
+        console.error(`error: Supabase select失敗 (batch index ${i}):`, selectError);
+        throw selectError;
+      }
+      const existIdSet = new Set((existRows ?? []).map(row => row.id));
       for (const record of batch) {
-        const { data, error: selectError } = await supabase
-          .from('CHARTS')
-          .select('id')
-          .eq('id', record.id)
-          .single();
-        if (selectError) {
-          if (selectError.code === 'PGRST116') {
-            continue;
-          }
-        }
-        if (data) {
+        if (existIdSet.has(record.id)) {
           const { error: updateError } = await supabase
             .from('CHARTS')
             .update({
@@ -179,6 +180,8 @@ export async function updateChartConstList(chartConstList: { title: string; diff
             console.error(`error: Supabase update失敗 (id: ${record.id}):`, updateError);
             throw updateError;
           }
+        } else {
+          log('warn', `CHARTSテーブルに存在しないためスキップ: id=${record.id}`);
         }
       }
     }
@@ -242,7 +245,7 @@ export async function updateRankingDataList(rankingDataList: { title: string; le
       });
     }
 
-    // 500件ずつまとめてselectし、存在するidのみupdate、なければログ出力
+    // 10件ずつまとめてselectし、存在するidのみupdate、なければログ出力
     const BATCH_SIZE = 10;
     for (let i = 0; i < records.length; i += BATCH_SIZE) {
       const batch = records.slice(i, i + BATCH_SIZE);
