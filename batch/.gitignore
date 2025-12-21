@@ -1,0 +1,35 @@
+# Node.js
+node_modules/
+dist/
+build/
+.env
+.env.*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# VSCode
+.vscode/
+
+# OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+Icon?
+
+# TypeScript
+*.tsbuildinfo
+
+# Logs
+logs
+*.log
+*.out
+*.pid
+
+# バックアップや一時ファイル
+*.swp
+*.swo
+*.tmp
+*.bak
