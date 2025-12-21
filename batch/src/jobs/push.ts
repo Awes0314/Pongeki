@@ -1,7 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
 import fs from 'fs';
 import path from 'path';
+
 import { log } from '../libs/logger.ts';
+import { fileURLToPath } from 'url';
+import { execSync } from 'child_process';
+
+// ESM環境で__dirnameを定義
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
  * SupabaseからCHARTSテーブルの全データを取得し、
@@ -34,7 +41,6 @@ export async function push() {
     log('info', `JSONファイル書き込み完了: ${jsonPath}`);
 
     // 3. git add/commit/push
-    const { execSync } = require('child_process');
     try {
       execSync(`git add ${jsonPath}`);
       execSync(`git commit -m "update data.json by push.ts"`);
