@@ -26,13 +26,30 @@ export async function push() {
     }
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // 1. CHARTSテーブルから全レコード・全カラム取得
-    const { data, error } = await supabase.from('CHARTS').select('*');
-    if (error) {
-      log('error', `Supabaseからのデータ取得失敗: ${error.message}`);
-      throw error;
+    // 1. CHARTSテーブルから全レコード・全カラム取得（1000件ずつページング）
+    const allData = [];
+    const PAGE_SIZE = 1000;
+    let offset = 0;
+    while (true) {
+      const { data, error } = await supabase
+        .from('CHARTS')
+        .select('*')
+        .range(offset, offset + PAGE_SIZE - 1);
+      if (error) {
+        log('error', `Supabaseからのデータ取得失敗: ${error.message}`);
+        throw error;
+      }
+      if (data && data.length > 0) {
+        allData.push(...data);
+        if (data.length < PAGE_SIZE) {
+          break;
+        }
+        offset += PAGE_SIZE;
+      } else {
+        break;
+      }
     }
-    log('info', `取得件数: ${data?.length ?? 0}`);
+    log('info', `取得件数: ${allData.length}`);
 
     // 2. jsonファイルを上書き
     const jsonPath = path.resolve(__dirname, '../../../next/public/data/data.json');
