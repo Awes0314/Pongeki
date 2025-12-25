@@ -20,6 +20,10 @@ jobs:
         working-directory: batch
         run: npm ci
 
+      - name: Build batch
+        working-directory: batch
+        run: npm run build
+
       - name: Run batch
         working-directory: batch
         run: npm run start
