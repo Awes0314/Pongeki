@@ -26,7 +26,13 @@ const _userAgent: string = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKi
 export async function login () {
   log('info', 'ログイン処理開始');
 
-  const browserOngekiNet = await puppeteer.launch({ headless: true });
+  const browserOngekiNet = await puppeteer.launch({
+    headless: true,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+    ],
+  });
 
   try {
     const username = process.env.ONGEKI_NET_USER;
