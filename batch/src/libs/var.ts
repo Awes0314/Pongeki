@@ -1,0 +1,45 @@
+/**
+ * 楽曲名「Singularity」の重複対策用
+ * Singularity - ETIA.「Arcaea」
+ * Singularity - SEGA SOUND STAFF「セガNET麻雀 MJ」
+ * Singularity - technoplanet
+ */
+export const SINGULARITY_ARCAEA = 'Singularity - ETIA.「Arcaea」';
+export const SINGULARITY_MJ = 'Singularity - SEGA SOUND STAFF「セガNET麻雀 MJ」';
+export const SINGULARITY_TECHNOPLANET = 'Singularity - technoplanet';
+export const SINGULARITY_ORDER_ONGEKI_NET = [
+  SINGULARITY_ARCAEA,
+  SINGULARITY_MJ,
+  SINGULARITY_TECHNOPLANET,
+];
+export const SINGULARITY_ORDER_TECHFLAG = [
+  SINGULARITY_TECHNOPLANET,
+  SINGULARITY_ARCAEA,
+  SINGULARITY_MJ,
+];
+export const SINGULARITY_ORDER_CHARTCONST = [
+  SINGULARITY_TECHNOPLANET,
+  SINGULARITY_TECHNOPLANET,
+  SINGULARITY_TECHNOPLANET,
+  SINGULARITY_TECHNOPLANET,
+  SINGULARITY_ARCAEA,
+  SINGULARITY_ARCAEA,
+  SINGULARITY_ARCAEA,
+  SINGULARITY_ARCAEA,
+  SINGULARITY_MJ,
+  SINGULARITY_MJ,
+  SINGULARITY_MJ,
+  SINGULARITY_MJ,
+];
+
+/**
+ * 難易度とURL内のdiffパラメータの対応表
+ */
+export const DIFFS = [0, 1, 2, 3, 10];
+export const DIFF_MAP: { [key: number]: string } = {
+  0: 'BASIC',
+  1: 'ADVANCED',
+  2: 'EXPERT',
+  3: 'MASTER',
+  10: 'LUNATIC',
+};
