@@ -93,3 +93,17 @@ export async function sendCompletionEmail(
 
   await sendNotificationEmail(subject, text);
 }
+
+/**
+ * エラーメール送信処理
+ * @param errorMessage
+ * @returns {Promise<void>}
+ */
+export async function sendErrorEmail(errorMessage: string) {
+  const subject = "Pongeki バッチ処理エラー発生";
+  const text = "Pongeki のバッチ処理中にエラーが発生しました。\n\n"
+    + "発生時間: " + new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" }) + "\n\n"
+    + "エラーメッセージ:\n" + errorMessage + "\n";
+    
+  await sendNotificationEmail(subject, text);
+}

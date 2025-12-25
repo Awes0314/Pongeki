@@ -1,0 +1,38 @@
+name: Daily Batch
+
+on:
+  schedule:
+    - cron: '0 16 * * *' # JST 1:00 AM daily
+  workflow_dispatch:
+
+jobs:
+  batch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        working-directory: batch
+        run: npm ci
+
+      - name: Run batch
+        working-directory: batch
+        run: npm run start
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          ONGEKI_ID: ${{ secrets.ONGEKI_ID }}
+          ONGEKI_PASSWORD: ${{ secrets.ONGEKI_PASSWORD }}
+
+      - name: Commit json
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add data/*.json
+          git commit -m "batch: update data" || echo "no changes"
+          git push
