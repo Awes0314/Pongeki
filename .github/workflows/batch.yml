@@ -30,8 +30,8 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          ONGEKI_ID: ${{ secrets.ONGEKI_ID }}
-          ONGEKI_PASSWORD: ${{ secrets.ONGEKI_PASSWORD }}
+          ONGEKI_NET_USER: ${{ secrets.ONGEKI_NET_USER }}
+          ONGEKI_NET_PASS: ${{ secrets.ONGEKI_NET_PASS }}
           EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
           EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
