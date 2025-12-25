@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { log } from './logger.ts';
+import { log } from './logger.js';
 
 /**
  * 通知メール送信処理
@@ -104,6 +104,6 @@ export async function sendErrorEmail(errorMessage: string) {
   const text = "Pongeki のバッチ処理中にエラーが発生しました。\n\n"
     + "発生時間: " + new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" }) + "\n\n"
     + "エラーメッセージ:\n" + errorMessage + "\n";
-    
+
   await sendNotificationEmail(subject, text);
 }

@@ -1,9 +1,9 @@
 import "dotenv/config";
-import { login, getAllMusic, getTechFlag, getChartConstList, getRankingData } from "./jobs/fetch.ts";
-import { upsertMusicList, updateTechFlagList, updateChartConstList, updateRankingDataList } from "./jobs/insert.ts";
-import { sendStartEmail, sendCompletionEmail, sendErrorEmail } from "./libs/mailer.ts";
-import { push } from "./jobs/push.ts";
-import { log } from "./libs/logger.ts";
+import { login, getAllMusic, getTechFlag, getChartConstList, getRankingData } from "./jobs/fetch.js";
+import { upsertMusicList, updateTechFlagList, updateChartConstList, updateRankingDataList } from "./jobs/insert.js";
+import { sendStartEmail, sendCompletionEmail, sendErrorEmail } from "./libs/mailer.js";
+import { push } from "./jobs/push.js";
+import { log } from "./libs/logger.js";
 
 async function main() {
   try {

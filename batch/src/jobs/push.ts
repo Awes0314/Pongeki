@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import fs from 'fs';
 import path from 'path';
 
-import { log } from '../libs/logger.ts';
+import { log } from '../libs/logger.js';
 import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
 
