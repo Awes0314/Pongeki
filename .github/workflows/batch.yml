@@ -1,4 +1,4 @@
-name: Daily Batch
+name: Ongeki-net scraping batch
 
 on:
   schedule:
