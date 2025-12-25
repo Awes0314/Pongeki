@@ -54,7 +54,7 @@ export async function push() {
     // 2. jsonファイルを上書き
     const jsonPath = path.resolve(__dirname, '../../../next/public/data/data.json');
     fs.mkdirSync(path.dirname(jsonPath), { recursive: true });
-    fs.writeFileSync(jsonPath, JSON.stringify(data, null, 2), 'utf-8');
+    fs.writeFileSync(jsonPath, JSON.stringify(allData, null, 2), 'utf-8');
     log('info', `JSONファイル書き込み完了: ${jsonPath}`);
 
     // 3. git add/commit/push
