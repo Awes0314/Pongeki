@@ -7,8 +7,8 @@ import {
   SINGULARITY_ORDER_CHARTCONST,
   DIFFS,
   DIFF_MAP
-} from '../libs/var.ts';
-import { log } from '../libs/logger.ts';
+} from '../libs/var.js';
+import { log } from '../libs/logger.js';
 
 /**
  * ログイン処理にて取得したcookie情報

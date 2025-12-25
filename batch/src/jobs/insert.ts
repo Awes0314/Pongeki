@@ -1,6 +1,6 @@
-import { generateChartId } from '../libs/function.ts';
+import { generateChartId } from '../libs/function.js';
 import { createClient } from '@supabase/supabase-js';
-import { log } from '../libs/logger.ts';
+import { log } from '../libs/logger.js';
 
 /**
  * 対象楽曲情報一覧をupsertする
