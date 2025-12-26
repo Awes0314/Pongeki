@@ -51,9 +51,12 @@ export async function push() {
     }
     log('info', `取得件数: ${allData.length}`);
 
-    // 2. jsonファイルを上書き
+    // 2. jsonファイルを上書き（存在しない場合はエラー）
     const jsonPath = path.resolve(__dirname, '../../../next/public/data/data.json');
-    fs.mkdirSync(path.dirname(jsonPath), { recursive: true });
+    if (!fs.existsSync(jsonPath)) {
+      log('error', `data.jsonが存在しません: ${jsonPath}`);
+      throw new Error(`data.jsonが存在しません: ${jsonPath}`);
+    }
     fs.writeFileSync(jsonPath, JSON.stringify(allData, null, 2), 'utf-8');
     log('info', `JSONファイル書き込み完了: ${jsonPath}`);
 
