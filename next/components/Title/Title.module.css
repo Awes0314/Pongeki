@@ -11,7 +11,7 @@
     rgba(61, 90, 128, 0.15) 100%
   );
   border-radius: var(--radius);
-  padding: 1rem 2.4rem 1.2rem;
+  padding: 0.8rem 2.4rem;
   margin: 0 auto;
 }
 
