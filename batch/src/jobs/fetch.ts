@@ -182,9 +182,14 @@ export async function getAllMusic() {
       }
     }
 
-    // allMusicをlevelでフィルタリング（配列に一致するもののみ）
-    // const filter = ["15", "14+", "0"];
-    // const filteredMusic = allMusic.filter(music => filter.includes(music.level));
+    // 環境変数 SLICE_SIZE が定義されている場合、Number化してallMusicをスライス
+    const sliceSizeEnv = process.env.SLICE_SIZE;
+    if (sliceSizeEnv) {
+      const sliceSize = Number(sliceSizeEnv);
+      if (!isNaN(sliceSize) && sliceSize > 0) {
+        allMusic.splice(sliceSize);
+      }
+    }
 
     log('info', `全楽曲数: ${allMusic.length}`);
     log('info', '全楽曲取得処理完了');
@@ -215,6 +220,12 @@ export async function getTechFlag() {
       diff: string;
       level: string;
     }[] = [];
+
+    // 環境変数 EXECUTE_TECHFLAG_UPDATE が "false" の場合、空配列を返して処理をスキップ
+    if (process.env.EXECUTE_TECHFLAG_UPDATE === "false") {
+      log('info', 'EXECUTE_TECHFLAG_UPDATE が false のため、テクチャレ対象楽曲取得処理をスキップ');
+      return [];
+    }
 
     const eventlogUrl = 'https://ongeki-net.com/ongeki-mobile/record/eventlog/';
     const eventlogRes = await fetch(eventlogUrl, {
@@ -380,6 +391,12 @@ export async function getChartConstList() {
   log('info', '譜面定数情報一覧取得処理開始');
 
   try {
+    // 環境変数 EXECUTE_CHARTCONST_UPDATE が "false" の場合、空配列を返して処理をスキップ
+    if (process.env.EXECUTE_CHARTCONST_UPDATE === "false") {
+      log('info', 'EXECUTE_CHARTCONST_UPDATE が false のため、譜面定数情報取得処理をスキップ');
+      return [];
+    }
+
     const url = 'https://ongeki-score.net/music';
     const res = await fetch(url);
     const html = await res.text();
@@ -417,7 +434,6 @@ export async function getChartConstList() {
     if (singularityIndexes.length === SINGULARITY_ORDER_CHARTCONST.length) {
       singularityIndexes.forEach((musicIdx, orderIdx) => {
         chartConstList[musicIdx].title = SINGULARITY_ORDER_CHARTCONST[orderIdx];
-        log('info', `Singularity楽曲名変更: index=${musicIdx} title=${chartConstList[musicIdx].title} chartConst=${chartConstList[musicIdx].chartConst}`);  
       });
     } else if (singularityIndexes.length > 0) {
       log('warn', `Singularityの数が想定外です (${singularityIndexes.length})`);
@@ -455,6 +471,12 @@ export async function getChartConstList() {
  */
 export async function getRankingData(musicList: {title: string; level: string; diff: string; diffNum: string; idx: string;}[]) {
   log('info', 'ランキングデータ取得処理開始');
+
+  // 環境変数 EXECUTE_RANKING_UPDATE が "false" の場合、空配列を返して処理をスキップ
+  if (process.env.EXECUTE_RANKING_UPDATE === "false") {
+    log('info', 'EXECUTE_RANKING_UPDATE が false のため、ランキングデータ取得処理をスキップ');
+    return [];
+  }
 
   const results: any[] = [];
   let lastIndex = 0;

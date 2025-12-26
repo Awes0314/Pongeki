@@ -19,12 +19,18 @@ jobs:
       - name: Install dependencies
         working-directory: batch
         run: npm ci
+      
+      - name: Set git identity
+        run:
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Build batch
         working-directory: batch
         run: npm run build
 
-      - name: Run batch
+      - name: Run batch for manual
+        if: github.event_name == 'workflow_dispatch'
         working-directory: batch
         run: npm run start
         env:
@@ -38,11 +44,23 @@ jobs:
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
           EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
-
-      - name: Commit json
-        run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git add data/*.json
-          git commit -m "batch: update data" || echo "no changes"
-          git push
+          SLICE_SIZE: ${{ vars.SLICE_SIZE }}
+          EXECUTE_TECHFLAG_UPDATE: ${{ vars.EXECUTE_TECHFLAG_UPDATE }}
+          EXECUTE_CHARTCONST_UPDATE: ${{ vars.EXECUTE_CHARTCONST_UPDATE }}
+          EXECUTE_RANKING_UPDATE: ${{ vars.EXECUTE_RANKING_UPDATE }}
+      
+      - name: Run batch for cron
+        if: github.event_name == 'schedule'
+        working-directory: batch
+        run: npm run start
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          ONGEKI_NET_USER: ${{ secrets.ONGEKI_NET_USER }}
+          ONGEKI_NET_PASS: ${{ secrets.ONGEKI_NET_PASS }}
+          EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
+          EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
