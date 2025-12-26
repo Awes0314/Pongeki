@@ -1,5 +1,8 @@
 name: Ongeki-net scraping batch
 
+permissions:
+  contents: write
+
 on:
   schedule:
     - cron: '0 16 * * *' # JST 1:00 AM daily
@@ -21,7 +24,7 @@ jobs:
         run: npm ci
       
       - name: Set git identity
-        run:
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
