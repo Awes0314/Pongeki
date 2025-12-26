@@ -27,7 +27,7 @@ const HeadMeta = ({ title, description, imagePath }: HeadMetaProps): JSX.Element
       <meta property="og:image" content={imagePath || defaultImagePath} />
       <meta property="og:url" content="https://pongeki.awes.jp/" />
       <meta property="og:type" content="website" />
-      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:card" content="summary" />
       <meta name="twitter:title" content={title || defaultTitle} />
       <meta name="twitter:description" content={description || defaultDescription} />
       <meta name="twitter:image" content={imagePath || defaultImagePath} />

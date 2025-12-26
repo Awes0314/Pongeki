@@ -1,0 +1,86 @@
+.descriptionSection {
+  margin-top: 2rem;
+}
+
+.optionSection {
+  margin-top: 2rem;
+}
+
+.Tabs {
+  display: flex;
+  justify-content: space-between;
+}
+
+.Tab {
+  width: 48%;
+  background: #eee;
+  color: var(--color-dark);
+  border: none;
+  border-bottom: 2px solid var(--color-splight-blue);
+  border-radius: 8px 8px 0 0;
+  padding: 0.8rem 0 0.7rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.TabActive {
+  background: var(--color-main-blue);
+  border-bottom: 2px solid var(--color-orange);
+  color: #fff;
+}
+
+.checkboxContainer {
+  margin-top: 1rem;
+  height: 2.2rem;
+}
+
+.checkbox {
+  display: inline-block;
+  margin-left: 1.5rem;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border: 1.5px solid var(--color-light-blue);
+  cursor: pointer;
+  color: var(--color-main-blue);
+  background: #f3f6fa;
+}
+
+.checkboxChecked {
+  color: #fff;
+  background: linear-gradient(90deg, #3d5a80 0%, var(--color-light-blue) 100%);
+}
+
+.loadingArea {
+  text-align: center;
+}
+
+.loadingSpinner {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  border: 0.3rem solid #bbb;
+  border-top: 0.3rem solid #3d5a80;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loadingText {
+  margin-left: 1rem;
+}
+
+.rankingSection {
+  margin-top: 1rem;
+  text-align: center;
+}

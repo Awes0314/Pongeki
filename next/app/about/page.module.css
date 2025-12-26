@@ -1,0 +1,44 @@
+.container {
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+.toc {
+	margin-top: 2.4rem;
+	padding-left: 1rem;
+	list-style: none;
+}
+
+.tocLink {
+	display: block;
+	font-size: 0.9rem;
+	margin-top: 0.4rem;
+}
+
+.content {
+	color: var(--color-dark);
+	margin-top: 2.4rem;
+	padding-top: 2.4rem;
+	border-top: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.heading {
+	padding-left: 1rem;
+	font-size: 1.1rem;
+}
+
+.paragraph {
+	margin-top: 1.2rem;
+}
+
+.list {
+	padding-left: 1.6rem;
+	font-size: 0.92rem;
+  letter-spacing: 0.01rem;
+  line-height: 1.85rem;
+}
+
+.link {
+  font-weight: bold;
+  text-decoration: none;
+}

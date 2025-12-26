@@ -1,0 +1,28 @@
+.descriptionSection {
+  margin-top: 2rem;
+}
+
+.optionSection {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.optionLabel {
+  display: inline-block;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border: 1.5px solid var(--color-light-blue);
+  cursor: pointer;
+  color: var(--color-main-blue);
+  background: #f3f6fa;
+}
+
+.optionLabelChecked {
+  color: #fff;
+  background: linear-gradient(90deg, #3d5a80 0%, var(--color-light-blue) 100%);
+}
