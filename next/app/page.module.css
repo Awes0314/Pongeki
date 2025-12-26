@@ -1,0 +1,22 @@
+.cardContainer {
+	margin-top: 4rem;
+	display: flex;
+	gap: 2rem;
+	flex-wrap: wrap;
+}
+
+.aboutContainer {
+	margin-top: 4rem;
+}
+
+@media (min-width: 481px) {
+	.cardContainer {
+		margin: 4rem auto 0;
+		max-width: 800px;
+		display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem 2rem;
+    justify-content: center;
+    align-items: stretch;
+	}
+}
