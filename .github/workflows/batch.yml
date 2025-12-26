@@ -1,5 +1,8 @@
 name: Ongeki-net scraping batch
 
+permissions:
+  contents: write
+
 on:
   schedule:
     - cron: '0 16 * * *' # JST 1:00 AM daily
