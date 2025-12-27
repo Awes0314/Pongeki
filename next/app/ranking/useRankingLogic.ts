@@ -16,25 +16,7 @@ export const useDatabaseLogic = () => {
     if (typeof window === "undefined") return;
     // 初回アクセス時にlocalStorageの初期化を行う
     initializeLocalStorageSettings();
-    function collectLocalStorage() {
-      const result: { [key: string]: string | null } = {};
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (!key) continue;
-        result[key] = localStorage.getItem(key);
-      }
-      return result;
-    }
-    const localStorageData = collectLocalStorage();
-    fetch('/api/log', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'visit ranking page',
-        localStorage: localStorageData,
-        userAgent: navigator.userAgent
-      }),
-    });
+
     const type = localStorage.getItem("ranking-type");
     if (type === "ts" || type === "ps") setTab(type);
     const showAfter2nd = localStorage.getItem("ranking-show-after-2nd");
