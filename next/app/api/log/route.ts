@@ -44,6 +44,14 @@ function convertLocalStorageKeys(obj: { [key: string]: string | null }) {
 }
 
 export async function POST(request: Request) {
+  // production環境以外ではログを保存しない
+  if (process.env.VERCEL_ENV !== 'production') {
+    return new Response(
+      JSON.stringify({ error: 'Logging is disabled in non-production environments' }),
+      { status: 403 }
+    );
+  }
+
   try {
     const body = await request.json();
 

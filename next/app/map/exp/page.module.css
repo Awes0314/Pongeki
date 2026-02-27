@@ -1,0 +1,152 @@
+.descriptionSection {
+  margin-top: 2rem;
+}
+
+.optionSection {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.optionLabel {
+  display: inline-block;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border: 1.5px solid var(--color-light-blue);
+  cursor: pointer;
+  color: var(--color-main-blue);
+  background: #f3f6fa;
+}
+
+.optionLabelChecked {
+  color: #fff;
+  background: linear-gradient(90deg, #3d5a80 0%, var(--color-light-blue) 100%);
+}
+
+.kioskButtonSection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding-top: 20px;
+}
+
+.modeToggleContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modeToggleLabel {
+  font-size: 14px;
+  color: #666;
+  white-space: nowrap;
+}
+
+.modeToggleSwitch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+}
+
+.modeToggleSwitch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.modeToggleSlider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.3s;
+  border-radius: 26px;
+}
+
+.modeToggleSlider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+.modeToggleSwitch input:checked + .modeToggleSlider {
+  background-color: #f3f03dff;
+}
+
+.modeToggleSwitch input:checked + .modeToggleSlider:before {
+  transform: translateX(24px);
+}
+
+.kioskButtonGroup {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.kioskButton {
+  padding: 10px 20px;
+  border: 3px solid #28a745;
+  border-radius: 12px;
+  background: #d4edda;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.kioskButton:hover:not(:disabled) {
+  background: #b8dcc5;
+}
+
+.kioskButton:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.kioskButton:disabled {
+  opacity: 1;
+  cursor: not-allowed;
+  border-color: #ccc;
+  background: #f0f0f0;
+  color: #999;
+}
+
+.kioskButtonDecide {
+  border-color: #df4554;
+  background: #f8d7da;
+}
+
+.kioskButtonDecide:hover:not(:disabled) {
+  background: #f1b8bd;
+}
+
+.tooltip {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  z-index: 1000;
+  max-width: 300px;
+}
+
+.tooltip p {
+  margin: 2px 0;
+  line-height: 1.5rem;;
+}
