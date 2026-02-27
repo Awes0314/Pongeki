@@ -677,10 +677,13 @@ export const useMapExpLogic = () => {
         const newX = prev.x + dx;
         const newY = prev.y + dy;
         
-        // マップの端を超えないように制限
-        const minX = canvasWidth - (mapSize.width + 100) * scale;
+        // マップの端を超えないように制限（余白は表示しない）
+        const DRAW_WIDTH = mapSize.width + 100;
+        const DRAW_HEIGHT = mapSize.height + 100;
+        
+        const minX = canvasWidth - DRAW_WIDTH * scale;
         const maxX = 0;
-        const minY = canvasHeight - (mapSize.height + 100) * scale;
+        const minY = canvasHeight - DRAW_HEIGHT * scale;
         const maxY = 0;
         
         const clampedX = Math.max(minX, Math.min(maxX, newX));
@@ -716,7 +719,18 @@ export const useMapExpLogic = () => {
     const mouseY = e.clientY - rect.top;
     
     setScale((prevScale) => {
-      const newScale = Math.max(0.173, Math.min(3, prevScale * delta));
+      // マップ全体が表示される最小スケールを計算
+      const DRAW_WIDTH = mapSize.width + 100;
+      const DRAW_HEIGHT = mapSize.height + 100;
+      
+      // 幅と高さそれぞれで、マップ全体が収まる最小スケールを計算
+      const minScaleX = canvasWidth / DRAW_WIDTH;
+      const minScaleY = canvasHeight / DRAW_HEIGHT;
+      
+      // 大きい方を採用（両方の辺がキャンバスに収まる）
+      const minScaleForFullView = Math.max(minScaleX, minScaleY);
+      
+      const newScale = Math.max(minScaleForFullView, Math.min(3, prevScale * delta));
       
       setOffset((prevOffset) => {
         // マウス位置を中心にズーム
@@ -726,10 +740,10 @@ export const useMapExpLogic = () => {
         let newX = mouseX - baseX * newScale;
         let newY = mouseY - baseY * newScale;
         
-        // マップの端を超えないように制限
-        const minX = canvasWidth - (mapSize.width + 100) * newScale;
+        // マップの端を超えないように制限（余白は表示しない）
+        const minX = canvasWidth - DRAW_WIDTH * newScale;
         const maxX = 0;
-        const minY = canvasHeight - (mapSize.height + 100) * newScale;
+        const minY = canvasHeight - DRAW_HEIGHT * newScale;
         const maxY = 0;
         
         newX = Math.max(minX, Math.min(maxX, newX));
@@ -743,6 +757,115 @@ export const useMapExpLogic = () => {
       return newScale;
     });
   };
+
+  const scaleRef = useRef(scale);
+  const offsetRef = useRef(offset);
+  const mapSizeRef = useRef(mapSize);
+  const canvasWidthRef = useRef(canvasWidth);
+  const canvasHeightRef = useRef(canvasHeight);
+
+  useEffect(() => {
+    scaleRef.current = scale;
+  }, [scale]);
+
+  useEffect(() => {
+    offsetRef.current = offset;
+  }, [offset]);
+
+  useEffect(() => {
+    mapSizeRef.current = mapSize;
+  }, [mapSize]);
+
+  useEffect(() => {
+    canvasWidthRef.current = canvasWidth;
+  }, [canvasWidth]);
+
+  useEffect(() => {
+    canvasHeightRef.current = canvasHeight;
+  }, [canvasHeight]);
+
+  // ピンチで拡大縮小（既存mapと同じ処理）
+  useEffect(() => {
+    const svg = svgRef.current;
+    if (!svg) return;
+    
+    let startDist: number | null = null;
+    let startMid: { x: number; y: number } | null = null;
+    let startScale: number | null = null;
+    let startOffset: { x: number; y: number } | null = null;
+
+    function onTouchStart(e: TouchEvent) {
+      if (e.touches.length === 2) {
+        const [t1, t2] = e.touches;
+        startDist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+        startMid = { x: (t1.clientX + t2.clientX) / 2, y: (t1.clientY + t2.clientY) / 2 };
+        startScale = scaleRef.current;
+        startOffset = { ...offsetRef.current };
+      }
+    }
+
+    function onTouchMove(e: TouchEvent) {
+      if (e.touches.length === 2 && startDist && startMid && startScale !== null && startOffset && svg) {
+        e.preventDefault();
+        const [t1, t2] = e.touches;
+        const dist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+        const ratio = dist / startDist;
+        
+        // マップ全体が表示される最小スケールを計算
+        const DRAW_WIDTH = mapSizeRef.current.width + 100;
+        const DRAW_HEIGHT = mapSizeRef.current.height + 100;
+        
+        // 幅と高さそれぞれで、マップ全体が収まる最小スケールを計算
+        const minScaleX = canvasWidthRef.current / DRAW_WIDTH;
+        const minScaleY = canvasHeightRef.current / DRAW_HEIGHT;
+        
+        // 大きい方を採用（両方の辺がキャンバスに収まる）
+        const minScaleForFullView = Math.max(minScaleX, minScaleY);
+        
+        const newScale = Math.max(minScaleForFullView, Math.min(3, startScale * ratio));
+        
+        const svgRect = svg.getBoundingClientRect();
+        const baseX = (startMid.x - svgRect.left - startOffset.x) / startScale;
+        const baseY = (startMid.y - svgRect.top - startOffset.y) / startScale;
+
+        let newOffsetX = startMid.x - svgRect.left - baseX * newScale;
+        let newOffsetY = startMid.y - svgRect.top - baseY * newScale;
+        
+        // マップの端を超えないように制限（余白は表示しない）
+        const minX = canvasWidthRef.current - DRAW_WIDTH * newScale;
+        const maxX = 0;
+        const minY = canvasHeightRef.current - DRAW_HEIGHT * newScale;
+        const maxY = 0;
+        
+        newOffsetX = Math.max(minX, Math.min(maxX, newOffsetX));
+        newOffsetY = Math.max(minY, Math.min(maxY, newOffsetY));
+        
+        setScale(newScale);
+        setOffset({ x: newOffsetX, y: newOffsetY });
+      }
+    }
+
+    function onTouchEnd(e: TouchEvent) {
+      if (e.touches.length < 2) {
+        startDist = null;
+        startMid = null;
+        startScale = null;
+        startOffset = null;
+        localStorage.setItem("map-scale", String(scaleRef.current));
+        localStorage.setItem("map-offsets", JSON.stringify([offsetRef.current.x, offsetRef.current.y]));
+      }
+    }
+
+    svg.addEventListener("touchstart", onTouchStart, { passive: false });
+    svg.addEventListener("touchmove", onTouchMove, { passive: false });
+    svg.addEventListener("touchend", onTouchEnd);
+    
+    return () => {
+      svg.removeEventListener("touchstart", onTouchStart);
+      svg.removeEventListener("touchmove", onTouchMove);
+      svg.removeEventListener("touchend", onTouchEnd);
+    };
+  }, []);
 
   useEffect(() => {
     if (cameraRef.current) {
