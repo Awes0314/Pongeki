@@ -14,6 +14,7 @@ const menuLinks = [
   { href: "/recommend", label: "Pスコア枠おすすめ曲選出" },
   { href: "/ranking", label: "理論値ランキング" },
   { href: "/map", label: "アドベンチャーマップ" },
+  { href: "/map/exp", label: "アドベンチャーマップ NEW" },
   { href: "/about", label: "このサイトについて" },
 ];
 
