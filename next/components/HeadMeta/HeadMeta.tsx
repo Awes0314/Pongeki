@@ -13,9 +13,15 @@ type HeadMetaProps = {
  * @returns {JSX.Element}
  */
 const HeadMeta = ({ title, description, imagePath }: HeadMetaProps): JSX.Element => {
+  const baseUrl = "https://pongeki.awes.jp";
   const defaultTitle = "Pongeki オンゲキ Pスコア情報管理サイト";
   const defaultDescription = "Pongekiは、オンゲキ（O.N.G.E.K.I.）のPスコア・理論値・☆獲得人数などのランキングやおすすめ楽曲選出など、プレイヤーのための集計・分析情報を提供する非公式ファンサイトです。オンゲキの楽曲別データベースや自動おすすめ機能も搭載。データはオンゲキ-NETやOngekiScoreLog等の公開情報を元にしています。";
   const defaultImagePath = "/og-image.png";
+  
+  // 画像パスを絶対URLに変換
+  const fullImageUrl = imagePath 
+    ? (imagePath.startsWith('http') ? imagePath : `${baseUrl}${imagePath}`)
+    : `${baseUrl}${defaultImagePath}`;
   return (
     <>
       <title>{title || defaultTitle}</title>
@@ -24,13 +30,13 @@ const HeadMeta = ({ title, description, imagePath }: HeadMetaProps): JSX.Element
       <meta charSet="utf-8" />
       <meta property="og:title" content={title || defaultTitle} />
       <meta property="og:description" content={description || defaultDescription} />
-      <meta property="og:image" content={imagePath || defaultImagePath} />
+      <meta property="og:image" content={fullImageUrl} />
       <meta property="og:url" content="https://pongeki.awes.jp/" />
       <meta property="og:type" content="website" />
       <meta name="twitter:card" content="summary" />
       <meta name="twitter:title" content={title || defaultTitle} />
       <meta name="twitter:description" content={description || defaultDescription} />
-      <meta name="twitter:image" content={imagePath || defaultImagePath} />
+      <meta name="twitter:image" content={fullImageUrl} />
       <link rel="icon" href="/favicon.ico" />
       <link rel="apple-touch-icon" href="/favicon.ico" />
       <link rel="canonical" href="https://pongeki.awes.jp/" />
