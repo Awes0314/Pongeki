@@ -398,7 +398,11 @@ export async function getChartConstList() {
     }
 
     const url = 'https://ongeki-score.net/music';
-    const res = await fetch(url);
+    const res = await fetch(url, {
+      headers: {
+        'User-Agent': 'PongekiBatch/1.0 (+https://twitter.com/Extra_Awes)',
+      },
+    });
     const html = await res.text();
     const $ = cheerio.load(html);
     const chartConstList: {

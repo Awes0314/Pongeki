@@ -8,7 +8,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "id is required" }, { status: 400 });
   }
   const url = `https://ongeki-score.net/user/${encodeURIComponent(id)}/rating`;
-  const res = await fetch(url);
+  const res = await fetch(url, {
+    headers: {
+      'User-Agent': 'PongekiWeb/1.0 (+https://twitter.com/Extra_Awes)',
+    },
+  });
   const html = await res.text();
   return NextResponse.json({ html });
 }

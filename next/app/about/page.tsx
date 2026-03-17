@@ -51,6 +51,9 @@ const AboutPage = () => {
             また、誤情報や不足が含まれる可能性もあるため、あくまで参考情報としてご利用ください。<br />
             オンゲキアドベンチャー等の新規解禁曲は、サイト運営者の進行度依存となるため、集計が遅れる場合があります。
           </p>
+          <p className={style.paragraph}>
+            非公式ツールOngekiScoreLog(ongeki-score.net)の情報を元に集計したデータです。公式のデータとは一致しない場合があります。
+          </p>
 				</div>
 				<div className={style.content} id="operation">
 					<h2 className={style.heading}>運営について</h2>

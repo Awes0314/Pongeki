@@ -476,7 +476,7 @@ export const useRecommendLogic = () => {
           const tableW = 900;
           const colW = colRatio.map(r => Math.round((tableW - leftMargin - rightMargin) * r / totalRatio));
           const canvasW = tableW;
-          const canvasH = headerH + rowH * finalList.length + 60;
+          const canvasH = headerH + rowH * finalList.length + 60 + 40;
           const canvas = document.createElement("canvas");
           canvas.width = canvasW;
           canvas.height = canvasH;
@@ -699,6 +699,15 @@ export const useRecommendLogic = () => {
             }
             ctx.fillText(rising, x + colW[5] / 2, headerH + rowH * (r + 1) + rowH / 2, colW[5] - 8);
           }
+          // 出典表記
+          ctx.save();
+          ctx.font = "11px 'Segoe UI',sans-serif";
+          ctx.fillStyle = "#666";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText("非公式ツールOngekiScoreLog(ongeki-score.net)の情報を元に集計したデータです。公式のデータとは一致しない場合があります。", canvasW / 2, canvasH - 20);
+          ctx.restore();
+
           imgs.push(canvas.toDataURL("image/png"));
         }
         setResultImgs(imgs);
