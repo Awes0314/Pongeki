@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { login, getAllMusic, getTechFlag, getChartConstList, getRankingData } from "./jobs/fetch.js";
-import { upsertMusicList, updateTechFlagList, updateChartConstList, updateRankingDataList } from "./jobs/insert.js";
+import { upsertMusicList, updateTechFlagList, updateChartConstList, updateRankingDataList, markDeletedMusicList } from "./jobs/insert.js";
 import { sendStartEmail, sendCompletionEmail, sendErrorEmail } from "./libs/mailer.js";
 import { push } from "./jobs/push.js";
 import { log } from "./libs/logger.js";
@@ -8,7 +8,8 @@ import { log } from "./libs/logger.js";
 async function main() {
   try {
     log("info", "バッチ処理開始");
-    await sendStartEmail();
+    const startDateTime = new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" });
+    await sendStartEmail(startDateTime);
 
     // ログイン処理
     await login();
@@ -16,6 +17,7 @@ async function main() {
     // 対象楽曲一覧取得
     const musicList = await getAllMusic();
     await upsertMusicList(musicList);
+    await markDeletedMusicList(musicList);
     
     // テクチャレ対象楽曲取得
     const techFlagList = await getTechFlag();
@@ -32,7 +34,7 @@ async function main() {
     // プッシュ処理
     await push();
 
-    await sendCompletionEmail(musicList, techFlagList, chartConstList, rankingDataList);
+    await sendCompletionEmail(startDateTime, musicList, techFlagList, chartConstList, rankingDataList);
     log("info", "バッチ処理完了");
     process.exit(0);
   } catch (error) {

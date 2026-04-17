@@ -35,19 +35,21 @@ export async function sendNotificationEmail(subject: string, text: string) {
 
 /**
  * 開始通知メール送信処理
+ * @param startDateTime
  * @returns {Promise<void>}
  * @throws {Error}
  */
-export async function sendStartEmail() {
+export async function sendStartEmail(startDateTime: string) {
   const subject = "Pongeki バッチ処理開始";
   const text = "Pongeki のバッチ処理が開始されました。\n\n"
-    + "開始時間: " + new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" }) + "\n\n";
+    + "開始時間: " + startDateTime + "\n\n";
 
   await sendNotificationEmail(subject, text);
 }
 
 /**
  * 正常終了通知メール送信処理
+ * @param startDateTime
  * @param {musicList:{
  *  title: string;
  *  level: string;
@@ -77,6 +79,7 @@ export async function sendStartEmail() {
  * @throws {Error}
  */
 export async function sendCompletionEmail(
+  startDateTime: string,
   musicList: { title: string; level: string; diff: string; diffNum: string; idx: string; }[],
   techFlagList: { title: string; diff: string; level: string }[],
   chartConstList: { title: string; diff: string; level: string; chartConst: number }[],
@@ -84,7 +87,7 @@ export async function sendCompletionEmail(
 ) {
   const subject = "Pongeki バッチ処理完了";
   const text = "Pongeki のバッチ処理が正常に完了しました。\n\n"
-    + "開始時間: " + new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" }) + "\n\n"
+    + "開始時間: " + startDateTime + "\n\n"
     + "完了時間: " + new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" }) + "\n\n"
     + `対象楽曲数: ${musicList.length} 曲\n`
     + `テクチャレ対象楽曲数: ${techFlagList.length} 曲\n`
