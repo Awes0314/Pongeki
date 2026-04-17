@@ -27,6 +27,7 @@ export async function upsertMusicList(musicList: { title: string; level: string;
         title: music.title,
         diff: music.diff,
         level: music.level,
+        delete_flag: false,
       });
     }
 
@@ -329,4 +330,66 @@ export async function updateRankingDataList(rankingDataList: { title: string; le
     i += BATCH_SIZE;
   }
   log('info', 'ランキング情報一覧update処理完了');
+}
+
+/**
+ * getAllMusicに存在しない楽曲（削除済み）にdelete_flagをセットする
+ * @param {{ title: string; level: string; diff: string; }[]} musicList
+ * @returns {Promise<void>}
+ * @throws {Error}
+ */
+export async function markDeletedMusicList(musicList: { title: string; level: string; diff: string; }[]) {
+  log('info', '削除楽曲フラグ更新処理開始');
+
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error('Supabase URL or Service Role Key is not defined in environment variables.');
+  }
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  try {
+    // 現在のmusicListのIDセットを生成
+    const currentIds = new Set<string>();
+    for (const music of musicList) {
+      const chartId = await generateChartId(music.title, music.diff, music.level);
+      currentIds.add(chartId);
+    }
+
+    // DBから全IDを取得
+    const { data: allRows, error: selectError } = await supabase
+      .from('CHARTS')
+      .select('id');
+    if (selectError) throw selectError;
+
+    // DBにあってmusicListにないIDを抽出（削除された楽曲）
+    const deletedIds = (allRows ?? [])
+      .map((row: { id: string }) => row.id)
+      .filter((id: string) => !currentIds.has(id));
+
+    if (deletedIds.length === 0) {
+      log('info', '削除楽曲なし');
+      log('info', '削除楽曲フラグ更新処理完了');
+      return;
+    }
+
+    log('info', `削除楽曲数: ${deletedIds.length}`);
+
+    // 500件ずつbulk update
+    const BATCH_SIZE = 500;
+    for (let i = 0; i < deletedIds.length; i += BATCH_SIZE) {
+      const batch = deletedIds.slice(i, i + BATCH_SIZE);
+      const { error: updateError } = await supabase
+        .from('CHARTS')
+        .update({ delete_flag: true })
+        .in('id', batch);
+      if (updateError) throw updateError;
+    }
+
+    log('info', '削除楽曲フラグ更新処理完了');
+  } catch (err) {
+    log('error', `markDeletedMusicList関数でエラー: ${err}`);
+    console.error(err);
+    throw err;
+  }
 }
