@@ -403,8 +403,12 @@ export async function getChartConstList() {
         'User-Agent': 'PongekiBatch/1.0 (+https://twitter.com/Extra_Awes)',
       },
     });
+    log('info', `譜面定数ページ HTTPステータス: ${res.status}`);
     const html = await res.text();
+    log('info', `譜面定数ページ HTMLサイズ: ${html.length} bytes`);
+    log('info', `譜面定数ページ HTML先頭200文字: ${html.substring(0, 200).replace(/\n/g, ' ')}`);
     const $ = cheerio.load(html);
+    log('info', `table tbody tr 件数: ${$('table tbody tr').length}`);
     const chartConstList: {
       title: string;
       diff: string;
