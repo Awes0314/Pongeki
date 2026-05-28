@@ -407,8 +407,15 @@ export async function getChartConstList() {
       const page = await browser.newPage();
       await page.setUserAgent(`${_userAgent} PongekiBatch/1.0 (+https://twitter.com/Extra_Awes)`);
       await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
+      // Cloudflare Turnstile対策: tableが出現するまで最大30秒待つ
+      try {
+        await page.waitForSelector('table tbody tr', { timeout: 30000 });
+      } catch (_) {
+        log('warn', 'table tbody tr が30秒以内に出現しませんでした');
+      }
       html = await page.content();
       log('info', `譜面定数ページ HTMLサイズ: ${html.length} bytes`);
+      log('info', `譜面定数ページ HTML先頭500文字: ${html.substring(0, 500).replace(/\n/g, ' ')}`);
     } finally {
       await browser.close();
     }
