@@ -398,15 +398,20 @@ export async function getChartConstList() {
     }
 
     const url = 'https://ongeki-score.net/music';
-    const res = await fetch(url, {
-      headers: {
-        'User-Agent': 'PongekiBatch/1.0 (+https://twitter.com/Extra_Awes)',
-      },
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
-    log('info', `譜面定数ページ HTTPステータス: ${res.status}`);
-    const html = await res.text();
-    log('info', `譜面定数ページ HTMLサイズ: ${html.length} bytes`);
-    log('info', `譜面定数ページ HTML先頭200文字: ${html.substring(0, 200).replace(/\n/g, ' ')}`);
+    let html = '';
+    try {
+      const page = await browser.newPage();
+      await page.setUserAgent(`${_userAgent} PongekiBatch/1.0 (+https://twitter.com/Extra_Awes)`);
+      await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
+      html = await page.content();
+      log('info', `譜面定数ページ HTMLサイズ: ${html.length} bytes`);
+    } finally {
+      await browser.close();
+    }
     const $ = cheerio.load(html);
     log('info', `table tbody tr 件数: ${$('table tbody tr').length}`);
     const chartConstList: {
