@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/main.js",
-    "debug:chartconst": "node dist/debug_chartconst.js"
+    "start": "node dist/main.js"
   },
   "keywords": [],
   "author": "",
