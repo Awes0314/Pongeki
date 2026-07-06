@@ -23,6 +23,10 @@ const RecommendPage = () => {
         <p>
           <a href="https://ongeki-score.net/" target="_blank" rel="noopener" style={{ color: "#3d5a80" }}>OngekiScoreLog</a> と連携し、Pスコア枠更新におすすめの楽曲を自動で選出します。
         </p>
+        <p className={style.errorNotice}>
+          現在、この機能はご利用いただけません。<br/>
+          ご迷惑をおかけしますが、復旧まで今しばらくお待ちください。
+        </p>
       </section>
 
       {/* 外れ値除外モーダル */}
@@ -100,6 +104,7 @@ const RecommendPage = () => {
       )}
 
       <main className={style.mainContent}>
+        <div className={style.disabledOverlay} />
         <form onSubmit={logic.handleRecommend} className={style.formSection}>
           <div className={style.optionSection}>
             <div className={style.optionContentLabel}>OngekiScoreLog ID</div>
