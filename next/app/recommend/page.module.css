@@ -108,6 +108,16 @@
   margin: 0 auto;
   color: #293241;
   font-size: 1rem;
+  position: relative;
+}
+
+.disabledOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(180, 180, 180, 0.55);
+  z-index: 10;
+  cursor: not-allowed;
+  border-radius: 4px;
 }
 .formSection {
   display: flex;
@@ -186,6 +196,13 @@
 }
 .descriptionSection {
   margin-top: 2rem;
+}
+
+.errorNotice {
+  margin-top: 0.75rem;
+  color: #ee6c4d;
+  font-weight: bold;
+  font-size: 0.95rem;
 }
 
 .outlierExcludeContainer {
