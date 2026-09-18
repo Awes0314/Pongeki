@@ -19,6 +19,7 @@ const MapPage = () => {
       <Title title="オンゲキアドベンチャー マップ" />
       
       {/* 新機能のお知らせ */}
+      {/*
       <div style={{ 
         margin: "20px auto", 
         maxWidth: "600px", 
@@ -68,6 +69,7 @@ const MapPage = () => {
           新しいマップを試す →
         </a>
       </div>
+      */}
       
       <section className={style.descriptionSection}>
         <p>
