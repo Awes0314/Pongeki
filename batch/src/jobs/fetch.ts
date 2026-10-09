@@ -471,6 +471,7 @@ export async function getChartConstList() {
  *  psTheoryCount: number;
  *  ps5Tolerance: number;
  *  ps5MinScore: number;
+ *  jacketImageUrl: string;
  * }[]>}
  */
 export async function getRankingData(musicList: {title: string; level: string; diff: string; diffNum: string; idx: string;}[]) {
@@ -505,6 +506,7 @@ export async function getRankingData(musicList: {title: string; level: string; d
           const { idx, diffNum, title, level, diff } = music;
           // TSページ
           let tsTheoryCounts: number[] = [];
+          let jacketImageUrl = '';
           try {
             const tsUrl = `https://ongeki-net.com/ongeki-mobile/ranking/musicRankingDetail/?idx=${idx}&scoreType=2&rankingType=99&diff=${diffNum}`;
             const tsRes = await fetch(tsUrl, {
@@ -515,6 +517,8 @@ export async function getRankingData(musicList: {title: string; level: string; d
             });
             const tsHtml = await tsRes.text();
             const $ts = cheerio.load(tsHtml);
+            jacketImageUrl = $ts('div.container3 > div.m_10.t_l img.m_5.f_l').first().attr('src') || '';
+
             tsTheoryCounts = [];
             $ts('table.music_detail_ranking_inner_table table tbody tr').each((_, tr) => {
               const theoryBlock = $ts(tr).find('.theory_block .theory_text_block');
@@ -610,6 +614,7 @@ export async function getRankingData(musicList: {title: string; level: string; d
             psTheoryCount,
             ps5Tolerance,
             ps5MinScore,
+            jacketImageUrl,
           };
         }));
 
