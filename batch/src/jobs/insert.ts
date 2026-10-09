@@ -235,11 +235,12 @@ export async function updateChartConstList(chartConstList: { title: string; diff
  *  ps2Count: number;
  *  ps1Count: number;
  *  psTheoryCount: number;
+ *  jacketImageUrl: string;
  * }[]} rankingDataList
  * @returns {Promise<void>}
  * @throws {Error}
  */
-export async function updateRankingDataList(rankingDataList: { title: string; level: string; diff: string; psTheoryScore: number; ps5Tolerance: number; ps5MinScore: number; tsTheoryCounts: number[]; ps5RainbowCount: number; ps5Count: number; ps4Count: number; ps3Count: number; ps2Count: number; ps1Count: number; psTheoryCount: number;}[]) {
+export async function updateRankingDataList(rankingDataList: { title: string; level: string; diff: string; psTheoryScore: number; ps5Tolerance: number; ps5MinScore: number; tsTheoryCounts: number[]; ps5RainbowCount: number; ps5Count: number; ps4Count: number; ps3Count: number; ps2Count: number; ps1Count: number; psTheoryCount: number; jacketImageUrl: string;}[]) {
   log('info', 'ランキング情報一覧update処理開始');
 
   // rankingDataListが空の場合は処理をスキップ
@@ -271,6 +272,7 @@ export async function updateRankingDataList(rankingDataList: { title: string; le
       ps_2_count: music.ps2Count,
       ps_1_count: music.ps1Count,
       ps_theory_count: music.psTheoryCount,
+      jacket_image_url: music.jacketImageUrl,
     });
   }
   const BATCH_SIZE = 10;
@@ -308,6 +310,7 @@ export async function updateRankingDataList(rankingDataList: { title: string; le
                 ps_2_count: record.ps_2_count,
                 ps_1_count: record.ps_1_count,
                 ps_theory_count: record.ps_theory_count,
+                jacket_image_url: record.jacket_image_url,
               })
               .eq('id', record.id);
             if (updateError) {
@@ -356,16 +359,23 @@ export async function markDeletedMusicList(musicList: { title: string; level: st
       currentIds.add(chartId);
     }
 
-    // DBから全IDを取得
-    const { data: allRows, error: selectError } = await supabase
-      .from('CHARTS')
-      .select('id');
-    if (selectError) throw selectError;
+    // Supabaseは1リクエスト最大1000行のためidで安定ソートしてページングする
+    const PAGE_SIZE = 1000;
+    const allIds: string[] = [];
+    for (let from = 0; ; from += PAGE_SIZE) {
+      const { data: rows, error: selectError } = await supabase
+        .from('CHARTS')
+        .select('id')
+        .eq('delete_flag', false)
+        .order('id')
+        .range(from, from + PAGE_SIZE - 1);
+      if (selectError) throw selectError;
+      allIds.push(...(rows ?? []).map((row: { id: string }) => row.id));
+      if (!rows || rows.length < PAGE_SIZE) break;
+    }
 
     // DBにあってmusicListにないIDを抽出（削除された楽曲）
-    const deletedIds = (allRows ?? [])
-      .map((row: { id: string }) => row.id)
-      .filter((id: string) => !currentIds.has(id));
+    const deletedIds = allIds.filter((id) => !currentIds.has(id));
 
     if (deletedIds.length === 0) {
       log('info', '削除楽曲なし');
