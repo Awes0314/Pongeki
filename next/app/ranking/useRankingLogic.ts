@@ -64,6 +64,9 @@ export const useDatabaseLogic = () => {
     setTableImageUrl(null);
     setLoading(true);
 
+    // Canvasの高さ上限(約32,767px)を超えないよう表示行数を制限する
+    const MAX_ROWS = 800;
+
     // データ取得
     fetch("/data/data.json")
       .then((res) => res.json())
@@ -127,7 +130,6 @@ export const useDatabaseLogic = () => {
             item.rank ?? "",
             item.ts_theory_count ?? "",
           ]);
-          rows = rows.slice(0, 1000);
         } else {
           filtered = json.filter(
             (item: any) => Number(item.ps_theory_count ?? 0) >= 1
@@ -148,6 +150,7 @@ export const useDatabaseLogic = () => {
             item.ps_theory_count ?? "",
           ]);
         }
+        rows = rows.slice(0, MAX_ROWS);
         
         // canvas描画
         // 画像仕様: 上端・下端ボーダー、左右余白、カラム色・背景色
