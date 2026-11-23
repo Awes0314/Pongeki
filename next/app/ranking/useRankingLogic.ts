@@ -475,7 +475,10 @@ export const useDatabaseLogic = () => {
           let bg = "#fff",
             fg = "#293241";
           if (tab === "ts") {
-            if (val >= 1000) {
+            if (val >= 9999) {
+              bg = "#ff0202";
+              fg = "#ffffff";
+            } else if (val >= 1000) {
               bg = "#222";
               fg = "#fff";
             } else {
